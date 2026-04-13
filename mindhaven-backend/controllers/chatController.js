@@ -5,7 +5,7 @@ const { getAIResponse } = require('../utils/aiClient');
 const EMOTIONS_FILE = path.join(__dirname, '../data/emotions.json');
 const VOLUMES_FILE = path.join(__dirname, '../data/volumes.json');
 
-// 情绪分析（关键词匹配）
+// 情绪分析
 function analyzeEmotion(text) {
     const keywords = {
         '焦虑': ['焦虑', '担心', '害怕'],

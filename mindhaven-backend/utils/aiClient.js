@@ -1,7 +1,6 @@
 require('dotenv').config();
 
 async function getAIResponse(userMessage) {
-    // 如果未配置 API Key，回退到模拟回复
     if (!process.env.ZHIPU_API_KEY) {
         console.warn('⚠️ 未设置 ZHIPU_API_KEY，使用模拟回复');
         return "🌿 我听到了，能再多说一些吗？";
@@ -14,7 +13,7 @@ async function getAIResponse(userMessage) {
             'Authorization': `Bearer ${process.env.ZHIPU_API_KEY}`
         },
         body: JSON.stringify({
-            model: 'glm-4.7-flash',  // 免费模型
+            model: 'glm-4.7-flash',
             messages: [
                 {
                     role: 'system',
