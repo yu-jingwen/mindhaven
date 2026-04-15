@@ -110,10 +110,7 @@ function getRecommendation(emotion) {
 }
 
 function analyzeEmotion(text) {
-    // 否定词列表
     const negations = ['不', '没', '无', '别', '莫', '勿', '不是', '没有', '并非'];
-
-    // 检查是否包含否定词
     const hasNegation = negations.some(neg => text.includes(neg));
 
     const keywords = {
@@ -124,7 +121,6 @@ function analyzeEmotion(text) {
         '平静': ['平静', '放松', '安宁', '舒服', '宁静', '平和', '自在']
     };
 
-    // 优先匹配负面情绪
     const negativeOrder = ['焦虑', '疲惫', '忧伤'];
     for (let emotion of negativeOrder) {
         if (keywords[emotion].some(kw => text.includes(kw))) {
@@ -132,7 +128,6 @@ function analyzeEmotion(text) {
         }
     }
 
-    // 再匹配积极情绪
     for (let emotion of ['愉悦', '平静']) {
         if (keywords[emotion].some(kw => text.includes(kw))) {
             if (hasNegation) {
@@ -152,8 +147,14 @@ function getReply(emotion) {
 }
 
 const axios = require('axios');
+const ZHIPU_API_KEY = process.env.ZHIPU_API_KEY;
 
-const ZHIPU_API_KEY = process.env.ZHIPU_API_KEY ;
+// ------------------------------
+// 首页路由（修复 Cannot GET /）
+// ------------------------------
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'landc.html'));
+});
 
 app.post('/api/chat', async (req, res) => {
     const { message, userId } = req.body;
@@ -194,7 +195,7 @@ app.post('/api/chat', async (req, res) => {
             recommendation = getRecommendation(emotion);
         }
 
-        res.json({ reply: aiReply, emotion,recommendation});
+        res.json({ reply: aiReply, emotion, recommendation });
     } catch (error) {
         console.error('智谱API调用失败:', error.response?.data || error.message);
         const emotion = analyzeEmotion(message);
@@ -240,10 +241,8 @@ app.get('/api/check-auth', (req, res) => {
     res.json({ success: true });
 });
 
-// ==================== 启动服务器 ====================
-const PORT = 3000;
+// ==================== 启动服务器（Vercel 兼容版） ====================
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`✅ 后端服务已启动: http://localhost:${PORT}`);
-    console.log(`📄 访问前端页面: http://localhost:${PORT}/landc.html`);
-    console.log(`👥 用户数据已从 ${USERS_FILE} 加载（持久化存储）`);
+    console.log(`✅ 服务已启动`);
 });
