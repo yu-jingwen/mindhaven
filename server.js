@@ -246,3 +246,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`✅ 服务已启动`);
 });
+module.exports = app;
