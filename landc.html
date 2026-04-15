@@ -397,8 +397,8 @@
         nextBreath();
     }
     startBreathing();
-    // ==================== 后端 API 配置 ====================
-    const API_BASE = 'http://localhost:3000/api';
+    // ==================== 后端 API 配置（Vercel 线上版） ====================
+    const API_BASE = '/api';
     let currentUserId = null;
 
     // ==================== 2. 音频系统 ====================
@@ -479,7 +479,7 @@
 
     function closeImmersive() {
         const modal = document.getElementById('immersiveModal');
-        modal.style.display = 'none';
+        if(modal) modal.style.display = 'none';
         tracks.forEach(track => {
             const vol = track.volume / 0.7;
             updateVolume(track.id, vol);
@@ -658,7 +658,9 @@
         localStorage.setItem(`emotion_history_${currentUserId}`, JSON.stringify(emotionHistory));
         const modal = document.getElementById('gardenModal');
         modal.classList.add('show');
-        setTimeout(() => modal.classList.remove('show'), 5000);
+        setTimeout(() => {
+            if(modal) modal.classList.remove('show');
+        }, 5000);
     }
 
     function renderGardenChart() {
@@ -994,11 +996,12 @@
     userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSend(); });
     document.getElementById('deepModeBtn').addEventListener('click', openImmersive);
     document.getElementById('closeImmersiveBtn').addEventListener('click', () => {
-        clearInterval(immersiveInterval);
+        if(immersiveInterval) clearInterval(immersiveInterval);
         closeImmersive();
     });
     document.getElementById('closeGarden').addEventListener('click', () => {
-        document.getElementById('gardenModal').classList.remove('show');
+        const modal = document.getElementById('gardenModal');
+        if(modal) modal.classList.remove('show');
     });
 
     renderMixerUI();
